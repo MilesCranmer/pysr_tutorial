@@ -39,4 +39,6 @@ LABEL org.opencontainers.image.authors = "Miles Cranmer"
 LABEL org.opencontainers.image.source = "https://github.com/MilesCranmer/PySR"
 LABEL org.opencontainers.image.licenses = "Apache License 2.0"
 
+WORKDIR /workspace
+
 CMD ["ipython"]
