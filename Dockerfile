@@ -21,7 +21,7 @@ ADD ./PySR/requirements.txt /pysr/requirements.txt
 RUN pip3 install -r /pysr/requirements.txt
 
 # Install other useful libraries:
-RUN pip3 install jupyter nbconvert matplotlib seaborn scikit-learn
+RUN pip3 install jupyter jupyterlab nbconvert matplotlib seaborn scikit-learn ipywidgets
 RUN pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
 RUN pip3 install pytorch-lightning
 
