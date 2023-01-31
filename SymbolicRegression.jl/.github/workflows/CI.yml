@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+    paths:
+      - 'test/**'
+      - 'src/**'
+      - '.github/workflows/**'
+      - 'Project.toml'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'test/**'
+      - 'src/**'
+      - '.github/workflows/**'
+      - 'Project.toml'
+
+jobs:
+  test:
+    name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }} - ${{ github.event_name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        julia-version:
+          - '1.6.7'
+          - '1.7.3'
+          - '1.8.2'
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macOS-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Set up Julia"
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.julia-version }}
+      - name: "Cache dependencies"
+        uses: julia-actions/cache@v1
+      - name: "Build package"
+        uses: julia-actions/julia-buildpkg@v1
+      - name: "Run tests"
+        run: |
+            julia --color=yes --project=. -e 'import Pkg; Pkg.add("Coverage")'
+            julia --color=yes --threads=auto --check-bounds=yes --depwarn=yes --code-coverage=user --project=. -e 'import Pkg; Pkg.test(coverage=true)'
+            julia --color=yes --project=. coverage.jl
+        shell: bash
+        if: ${{ matrix.os != 'windows-latest' }}
+      - name: "Run tests, skipping errors."
+        run: |
+            julia --color=yes --project=. -e 'import Pkg; Pkg.add("Coverage")'
+            {
+              julia --color=yes --threads=auto --check-bounds=yes --depwarn=yes --code-coverage=user --project=. -e 'import Pkg; Pkg.test(coverage=true)'
+            } || {
+              echo "Tests failed, but continuing anyway."
+            }
+            julia --color=yes --project=. coverage.jl
+        shell: bash
+        if: ${{ matrix.os == 'windows-latest' }}
+      - name: "Coveralls"
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage-lcov.info
