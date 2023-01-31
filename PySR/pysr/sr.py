@@ -729,7 +729,7 @@ class PySRRegressor(MultiOutputMixin, RegressorMixin, BaseEstimator):
         temp_equation_file=False,
         tempdir=None,
         delete_tempfiles=True,
-        julia_project=None,
+        julia_project="/SymbolicRegression.jl",
         update=False,
         output_jax_format=False,
         output_torch_format=False,
