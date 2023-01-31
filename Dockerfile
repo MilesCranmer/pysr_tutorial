@@ -34,11 +34,6 @@ RUN pip3 install .
 # Install Julia pre-requisites:
 RUN python3 -c 'import pysr; pysr.install()'
 
-# Add local version of SymbolicRegression.jl.
-ADD ./SymbolicRegression.jl /SymbolicRegression.jl
-# Note that this folder must be fixed, because we have changed
-# PySR to always use the local version of SymbolicRegression.jl under that directory.
-
 # metainformation
 LABEL org.opencontainers.image.authors = "Miles Cranmer"
 LABEL org.opencontainers.image.source = "https://github.com/MilesCranmer/PySR"
