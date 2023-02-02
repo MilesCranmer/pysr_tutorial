@@ -14,4 +14,14 @@ We will now have a Jupyterlab instance running at http://localhost:8000.
 
 We can now work through the tutorial notebook: `pysr_demo.ipynb`.
 
-Following this, we will go through the examples page of the PySR documentation: [https://astroautomata.com/PySR/examples/](https://astroautomata.com/PySR/examples/)
+For custom modifications to the backend, see: https://astroautomata.com/PySR/backend/.
+
+Note that since we are sharing the workspace with `-v $(pwd):/workspace`, we have access
+to a local copy of `SymbolicRegression.jl`. Therefore, if we set:
+```python
+model = PySRRegressor(
+    ...,
+    julia_project="/workspace/SymbolicRegression.jl",
+)
+```
+then we will use the local copy of `SymbolicRegression.jl` instead of the one installed with PySR.
