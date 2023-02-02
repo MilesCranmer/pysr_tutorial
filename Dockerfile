@@ -13,7 +13,10 @@ COPY --from=jl /usr/local/julia /usr/local/julia
 ENV PATH="/usr/local/julia/bin:${PATH}"
 
 # Install IPython and other useful libraries:
-RUN pip install ipython matplotlib
+RUN pip3 install ipython matplotlib jupyter jupyterlab nbconvert seaborn scikit-learn ipywidgets
+RUN pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
+RUN pip3 install pytorch-lightning
+
 
 WORKDIR /pysr
 
@@ -21,9 +24,6 @@ ADD ./PySR/requirements.txt /pysr/requirements.txt
 RUN pip3 install -r /pysr/requirements.txt
 
 # Install other useful libraries:
-RUN pip3 install jupyter jupyterlab nbconvert matplotlib seaborn scikit-learn ipywidgets
-RUN pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
-RUN pip3 install pytorch-lightning
 
 # Install PySR:
 # We do a minimal copy so it doesn't need to rerun at every file change:
@@ -41,4 +41,4 @@ LABEL org.opencontainers.image.licenses = "Apache License 2.0"
 
 WORKDIR /workspace
 
-CMD ["ipython"]
+CMD ["/bin/bash", "-l"]
